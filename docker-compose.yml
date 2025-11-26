@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  gapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gapi:latest
+    container_name: gapi
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # 可选：挂载配置文件
+    # volumes:
+    #   - ./.env:/app/.env:ro
